@@ -741,6 +741,22 @@ def git_scm(xml_parent, data):
             'jenkins.scm.impl.trait.RegexSCMHeadFilterTrait')
         XML.SubElement(rshf, 'regex').text = data.get('head-filter-regex')
 
+    if data.get('filter-by-name-wildcard', None):
+        wscmf_name = XML.SubElement(traits,
+            'jenkins.scm.impl.trait.WildcardSCMHeadFilterTrait', {
+                'plugin': 'scm-api',
+            }
+        )
+        wscmf_name_mapping = [
+            ('includes', 'includes', ''),
+            ('excludes', 'excludes', '')
+        ]
+        helpers.convert_mapping_to_xml(
+            wscmf_name,
+            data.get('filter-by-name-wildcard', ''),
+            wscmf_name_mapping,
+            fail_required=True)
+
     if data.get('property-strategies', None):
         property_strategies(xml_parent, data)
 
